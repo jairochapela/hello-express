@@ -1,33 +1,22 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
+    <title><%= product.nombre %></title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <div class="jumbotron jumbotron-fluid">
-      <div class="container">
-        <h1 class="display-4"><%= title %></h1>
-        <p class="lead">Welcome to <%= title %></p>
-      </div>
-    </div>
 
     <div class="row">
-      <% for (var i = 0; i < products.length; i++) { %>
-        <div class="col-4">
-          
-          <div class="card" style="width: 18rem;">
-            <img src="images/<%= products[i].imagen %>" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title"><%= products[i].nombre %></h5>
-              <p class="card-text"><%= products[i].precio %>€</p>
-              <a href="/products/<%= products[i].ref %>" class="btn btn-primary">Comprar</a>
-            </div>
-          </div>
-          
-        </div> 
-      <% } %>
+      <div class="col-6">
+        <img src="/images/<%= product.imagen %>" alt="">
+      </div>
+      <div class="col-6">
+        <h2><%= product.nombre %></h2>
+        <h3><%= product.precio %>€</h3>
+
+        <a href="#" class="btn btn-primary">Comprar</a>
+      </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
