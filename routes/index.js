@@ -3,6 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  
   const products = [
     {nombre: "Microondas", precio: 45, existencias: 6},
     {nombre: "Frigorífico", precio: 200, existencias: 4},
