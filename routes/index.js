@@ -16,8 +16,13 @@ router.get('/products/:ref', function (req, res, next) {
     return p.ref==ref; 
   });
 
-  // Pasamos los datos del producto a la plantilla
-  res.render('product', {product});
+  if (product) {
+    // Pasamos los datos del producto a la plantilla
+    res.render('product', {product});
+  } else {
+    // Si no encontramos el producto con esa referencia, redirigimos a página de error.
+    res.redirect("/error");
+  }
 });
 
 module.exports = router;
