@@ -15,7 +15,12 @@
         <h2><%= product.nombre %></h2>
         <h3><%= product.precio %>€</h3>
 
-        <a href="#" class="btn btn-primary">Comprar</a>
+        <form action="/comprar" method="post">
+          <input type="hidden" name="ref" value="<%= product.ref %>">
+          <input class="btn btn-primary" type="submit" value="Comprar">
+        </form>
+
+        <!-- <a href="#" class="btn btn-primary">Comprar</a> -->
       </div>
     </div>
 
