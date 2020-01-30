@@ -25,4 +25,25 @@ router.get('/products/:ref', function (req, res, next) {
   }
 });
 
+var cesta = []; //provisional
+
+router.post("/comprar", function (req, res, next) {
+  const ref = req.body.ref;
+
+  // Busco entre los productos el que coincide con la referencia
+  const product = products.find(function(p) { 
+    return p.ref==ref; 
+  });
+
+  // Añadimos producto a la cesta
+  cesta.push(product);
+  // Redirigimos a página de productos
+  res.redirect("/");
+});
+
+router.get("/login", function (req, res, next) {
+  res.render("login");
+});
+
 module.exports = router;
+
