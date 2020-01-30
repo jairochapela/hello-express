@@ -8,10 +8,15 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/products/:ref', function (req, res, next) {
+  // Obtengo la referencia del producto a partir de la ruta
   var ref = req.params.ref;
+
+  // Busco entre los productos el que coincide con la referencia
   const product = products.find(function(p) { 
     return p.ref==ref; 
   });
+
+  // Pasamos los datos del producto a la plantilla
   res.render('product', {product});
 });
 
