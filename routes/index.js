@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var products = require('../models/products.js');
+var users = require('../models/users.js');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -43,6 +44,27 @@ router.post("/comprar", function (req, res, next) {
 
 router.get("/login", function (req, res, next) {
   res.render("login");
+});
+
+/**
+ * Procesamiento del formulario de login. Obtiene los datos del formulario en la
+ * petición (req) y comprueba si hay algún usuario con ese nombre y contraseña.
+ * Si coincide, genera una cookie y dirige a la página principal.
+ * Si no coincide, vuelve a cargar la página de login para mostrar un error.
+ */
+router.post("/login", function (req, res, next) {
+  const {username, password} = req.body;
+  const user = users.find(function (u) {
+    return (u.username == username && u.password == password);
+  });
+
+  if (user) {
+    //TODO: generar cookie
+    res.redirect("/");
+  } else {
+    //TODO: inyectar mensaje de error en plantilla
+    res.render("login");
+  }
 });
 
 module.exports = router;
