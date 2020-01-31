@@ -5,7 +5,8 @@ var users = require('../models/users.js');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'The Jungle', products });
+  const username = req.session.username;
+  res.render('index', { title: 'The Jungle', username, products });
 });
 
 router.get('/products/:ref', function (req, res, next) {
@@ -59,7 +60,7 @@ router.post("/login", function (req, res, next) {
   });
 
   if (user) {
-    //TODO: generar cookie
+    req.session.username = username;
     res.redirect("/");
   } else {
     //TODO: inyectar mensaje de error en plantilla
