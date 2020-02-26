@@ -4,6 +4,24 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var cookieSession = require('cookie-session');
 var logger = require('morgan');
+const Sequelize = require('sequelize');
+
+const sequelize = new Sequelize('tienda', 'jairo', 'abc123.', {
+  host: '192.168.0.240',
+  dialect: 'mariadb'
+});
+
+
+
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -43,5 +61,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 module.exports = app;
