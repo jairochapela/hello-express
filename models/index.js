@@ -1,6 +1,8 @@
 const sequelize = require('./db');
 const Producto = require('./products');
 const Usuario = require('./users');
+const Pedido = require('./pedido');
+const Carrito = require('./carrito');
 
 // Finalmente conectamos con la base de datos
 sequelize
@@ -15,7 +17,7 @@ sequelize
 
   module.exports = {
       Producto,
-      // Pedido,
+      Pedido,
       Usuario, 
-      // Carrito
+      Carrito
   }
