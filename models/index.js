@@ -4,6 +4,11 @@ const Usuario = require('./users');
 const Pedido = require('./pedido');
 const Carrito = require('./carrito');
 
+
+Usuario.hasOne(Carrito);
+Carrito.belongsTo(Usuario);
+  
+
 // Finalmente conectamos con la base de datos
 sequelize
   .authenticate()
