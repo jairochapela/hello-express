@@ -4,6 +4,7 @@ const Usuario = require('./users');
 const Pedido = require('./pedido');
 const Carrito = require('./carrito');
 const ProductoCarrito = require('./producto-carrito');
+const ProductoPedido = require('./producto-pedido');
 
 
 Usuario.hasOne(Carrito);
@@ -14,6 +15,9 @@ Pedido.belongsTo(Usuario);
 
 Carrito.belongsToMany(Producto, {through: ProductoCarrito});
 Producto.belongsToMany(Carrito, {through: ProductoCarrito});
+
+Pedido.belongsToMany(Producto, {through: ProductoPedido});
+Producto.belongsToMany(Pedido, {through: ProductoPedido});
 
 // Finalmente conectamos con la base de datos
 sequelize
