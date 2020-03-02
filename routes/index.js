@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var users = require('../models/users.js');
 
-const { Producto } = require('../models');
+const { Producto, Usuario } = require('../models');
 
 
 /* GET home page. */
@@ -76,6 +76,24 @@ router.post("/login", function (req, res, next) {
   } else {
     //TODO: inyectar mensaje de error en plantilla
     res.render("login");
+  }
+});
+
+
+router.get("/registro", function (req, res, next) {
+  res.render("registro");
+});
+
+
+router.post("/registro", function (req, res, next) {
+  const datos = req.body;
+  if (datos.password == datos.repassword) {
+    Usuario.create(datos)
+    .then(usuario => {
+      res.redirect("/login");
+    })
+  } else {
+    res.redirect("/registro");
   }
 });
 
