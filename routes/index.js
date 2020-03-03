@@ -83,20 +83,35 @@ router.post("/login", function (req, res, next) {
 
 
 router.get("/registro", function (req, res, next) {
-  res.render("registro");
+  res.render("registro", {error:undefined});
 });
 
 
 router.post("/registro", function (req, res, next) {
   const datos = req.body;
-  if (datos.password == datos.repassword) {
+
+  if (datos.nombre.length==0) {
+    res.render("registro", {datos, error:"El nombre no debe ir en blanco."})
+  }
+  else if (datos.apellidos.length==0) {
+    res.render("registro", {datos, error:"Los apellidos no deben ir en blanco."})
+  }
+  else if (datos.email.length==0) {
+    res.render("registro", {datos, error:"El email no debe ir en blanco."})
+  }
+  else if (datos.password.length<6) {
+    res.render("registro", {datos, error:"La contraseña debe tener al menos 6 caracteres."})
+  }
+  else if (datos.password != datos.repassword) {
+    res.render("registro", {datos, error:"Las contraseñas no coinciden."})
+  }
+  else {
     Usuario.create(datos)
     .then(usuario => {
       res.redirect("/login");
     })
-  } else {
-    res.redirect("/registro");
   }
+
 });
 
 module.exports = router;
