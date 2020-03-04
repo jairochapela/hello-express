@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var users = require('../models/users.js');
 
-const { Producto, Usuario } = require('../models');
+const { Producto, Usuario, Carrito } = require('../models');
 
 
 /* GET home page. */
@@ -44,14 +44,25 @@ router.post("/comprar", function (req, res, next) {
   const ref = req.body.ref;
 
   // Busco entre los productos el que coincide con la referencia
-  const product = products.find(function(p) { 
-    return p.ref==ref; 
+  Producto.findOne({where: {ref}})
+  .then(producto => {
+    if (producto) {
+      // Localizamos carrito y ponemos producto en carrito
+      const usuarioId = req.session.usuarioId;
+      if (!usuarioId) res.redirect("/login");
+      Carrito.findOrCreate({where: {usuarioId}, defaults: {usuarioId}})
+      .then(([carrito, created]) => {
+        carrito.addProducto(producto)
+        .then(() => {
+          // Redirigimos a página de productos
+          res.redirect("/");
+        })
+      })
+    } else {
+      // Mostrar página de error
+      res.render("error", {message: "No existe el producto solicitado"});
+    }
   });
-
-  // Añadimos producto a la cesta
-  cesta.push(product);
-  // Redirigimos a página de productos
-  res.redirect("/");
 });
 
 router.get("/login", function (req, res, next) {
