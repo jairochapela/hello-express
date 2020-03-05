@@ -138,8 +138,16 @@ router.post("/registro", function (req, res, next) {
 
 
 router.get("/carrito", function (req, res, next) {
-  res.render("carrito");
-})
+  const usuarioId = req.session.usuarioId;
+  if (!usuarioId) res.redirect("/login");
+  else {
+    Carrito.findOne({where:{usuarioId}, include:[Producto]})
+    .then(carrito => {
+      const productos = carrito.productos;
+      res.render("carrito", {productos});
+    })
+  }
+});
 
 module.exports = router;
 
