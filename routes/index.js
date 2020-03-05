@@ -144,7 +144,8 @@ router.get("/carrito", function (req, res, next) {
     Carrito.findOne({where:{usuarioId}, include:[Producto]})
     .then(carrito => {
       const productos = carrito.productos;
-      res.render("carrito", {productos});
+      const total = productos.reduce((total, p) => total + p.precio * p.productocarrito.cantidad, 0);
+      res.render("carrito", {productos, total});
     })
   }
 });

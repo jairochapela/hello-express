@@ -18,25 +18,20 @@
             <th>Subtotal</th>
         </thead>
         <tbody>
-            <tr>
-                <td>1001</td>
-                <td>Microondas</td>
-                <td>2</td>
-                <td>80</td>
-                <td>160</td>
-            </tr>
-            <tr>
-                <td>1002</td>
-                <td>TV</td>
-                <td>1</td>
-                <td>150</td>
-                <td>150</td>
-            </tr>
+            <% for (var i=0; i<productos.length; i++) { %>
+                <tr>
+                    <td><%= productos[i].ref %></td>
+                    <td><%= productos[i].nombre %></td>
+                    <td><%= productos[i].precio %></td>
+                    <td><%= productos[i].productocarrito.cantidad %></td>
+                    <td><%= productos[i].productocarrito.cantidad * productos[i].precio %></td>
+                </tr>
+            <% } %>
         </tbody>
         <tfoot>
             <tr>
                 <th colspan="4">Total</th>
-                <th>310</th>
+                <th><%= total %></th>
             </tr>
         </tfoot>
     </table>
