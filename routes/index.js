@@ -55,6 +55,11 @@ router.post("/comprar", function (req, res, next) {
         var productos = carrito.productos;
         var p = productos.find(p => p.ref==ref);
         if (p) {
+          p.productocarrito.increment({cantidad: 1})
+          .then(() => {
+            // Redirigimos a página de productos
+            res.redirect("/");
+          })
           //TODO: incrementar cantidad
         } else {
           carrito.addProducto(producto)
