@@ -58,14 +58,14 @@ router.post("/comprar", function (req, res, next) {
           p.productocarrito.increment({cantidad: 1})
           .then(() => {
             // Redirigimos a página de productos
-            res.redirect("/");
+            res.redirect("/carrito");
           })
           //TODO: incrementar cantidad
         } else {
           carrito.addProducto(producto)
           .then(() => {
             // Redirigimos a página de productos
-            res.redirect("/");
+            res.redirect("/carrito");
           })
         }
       })
