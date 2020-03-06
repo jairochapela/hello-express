@@ -162,6 +162,13 @@ router.post("/checkout", function (req, res, next) {
         //TODO: niveles de existencias OK, crear nuevo pedido con los productos
       } else {
         //TODO: mostrar un mensaje diciendo que no hay existencias suficientes
+        productos.forEach(p => {
+          p.hayExistencias = p.existencias >= p.productocarrito.cantidad;
+        });
+
+        const total = productos.reduce((total, p) => total + p.precio * p.productocarrito.cantidad, 0);
+
+        res.render("carrito", {productos, total});
       }
     })
   }
