@@ -150,5 +150,23 @@ router.get("/carrito", function (req, res, next) {
   }
 });
 
+
+router.post("/checkout", function (req, res, next) {
+  const usuarioId = req.session.usuarioId;
+  if (!usuarioId) res.redirect("/login");
+  else {
+    Carrito.findOne({where:{usuarioId}, include:[Producto]})
+    .then(carrito => {
+      const productos = carrito.productos;
+      if (productos.every(p => p.existencias >= p.productocarrito.cantidad)) {
+        //TODO: niveles de existencias OK, crear nuevo pedido con los productos
+      } else {
+        //TODO: mostrar un mensaje diciendo que no hay existencias suficientes
+      }
+    })
+  }
+});
+
+
 module.exports = router;
 
