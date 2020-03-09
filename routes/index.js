@@ -160,15 +160,11 @@ router.post("/checkout", function (req, res, next) {
         if (productos.every(p => p.existencias >= p.productocarrito.cantidad)) {
           //Niveles de existencias OK, crear nuevo pedido con los productos
           Pedido.create({usuarioId, estado:'PDTE_PAGO'})
-          .then(pedido => {
+          .then(pedido => 
             pedido.addProductos(productos)
-            .then(() => {
-              carrito.removeProductos(productos)
-              .then(() => {
-                res.redirect("/envio");
-              })
-            })
-          })
+            .then(() => carrito.removeProductos(productos))
+            .then(() => res.redirect("/pedido/" + pedido.id))
+          )
         } else {
           // mostrar un mensaje diciendo que no hay existencias suficientes
           productos.forEach(p => {
