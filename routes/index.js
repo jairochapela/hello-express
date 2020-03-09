@@ -154,27 +154,31 @@ router.post("/checkout", function (req, res, next) {
   const usuarioId = req.session.usuarioId;
   if (!usuarioId) res.redirect("/login");
   else {
-      Carrito.findOne({where:{usuarioId}, include:[Producto]})
-      .then(carrito => {
-        const productos = carrito.productos;
-        if (productos.every(p => p.existencias >= p.productocarrito.cantidad)) {
-          //Niveles de existencias OK, crear nuevo pedido con los productos
-          Pedido.create({usuarioId, estado:'PDTE_PAGO'})
-          .then(pedido => 
-            pedido.addProductos(productos)
-            .then(() => carrito.removeProductos(productos))
-            .then(() => res.redirect("/pedido/" + pedido.id))
-          )
-        } else {
-          // mostrar un mensaje diciendo que no hay existencias suficientes
-          productos.forEach(p => {
-            p.hayExistencias = p.existencias >= p.productocarrito.cantidad;
-          });
+      sequelize.transaction(t => {
+        return Carrito.findOne({where:{usuarioId}, include:[Producto]}, {transaction: t})
+        .then(carrito => {
+          const productos = carrito.productos;
+          if (productos.every(p => p.existencias >= p.productocarrito.cantidad)) {
+            //Niveles de existencias OK, crear nuevo pedido con los productos
+            return Pedido.create({usuarioId, estado:'PDTE_PAGO'}, {transaction: t})
+            .then(pedido => 
+              pedido.addProductos(productos, {transaction: t})
+              .then(() => carrito.removeProductos(productos, {transaction: t}))
+              .then(() => t.commit())
+              .then(() => res.redirect("/pedido/" + pedido.id))
+            )
+          } else {
+            // mostrar un mensaje diciendo que no hay existencias suficientes
+            productos.forEach(p => {
+              p.hayExistencias = p.existencias >= p.productocarrito.cantidad;
+            });
 
-          const total = productos.reduce((total, p) => total + p.precio * p.productocarrito.cantidad, 0);
+            const total = productos.reduce((total, p) => total + p.precio * p.productocarrito.cantidad, 0);
 
-          res.render("carrito", {productos, total});
-        }
+            return t.rollback()
+            .then(() => res.render("carrito", {productos, total}));
+          }
+        })
       })
   }
 });

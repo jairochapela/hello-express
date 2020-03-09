@@ -31,6 +31,7 @@ sequelize
   });
 
   module.exports = {
+      sequelize,
       Producto,
       Pedido,
       Usuario, 
