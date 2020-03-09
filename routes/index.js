@@ -2,8 +2,7 @@ var express = require('express');
 var router = express.Router();
 var users = require('../models/users.js');
 
-const { Producto, Usuario, Carrito } = require('../models');
-
+const { Producto, Usuario, Carrito, Pedido, sequelize } = require('../models');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -155,22 +154,32 @@ router.post("/checkout", function (req, res, next) {
   const usuarioId = req.session.usuarioId;
   if (!usuarioId) res.redirect("/login");
   else {
-    Carrito.findOne({where:{usuarioId}, include:[Producto]})
-    .then(carrito => {
-      const productos = carrito.productos;
-      if (productos.every(p => p.existencias >= p.productocarrito.cantidad)) {
-        //TODO: niveles de existencias OK, crear nuevo pedido con los productos
-      } else {
-        //TODO: mostrar un mensaje diciendo que no hay existencias suficientes
-        productos.forEach(p => {
-          p.hayExistencias = p.existencias >= p.productocarrito.cantidad;
-        });
+      Carrito.findOne({where:{usuarioId}, include:[Producto]})
+      .then(carrito => {
+        const productos = carrito.productos;
+        if (productos.every(p => p.existencias >= p.productocarrito.cantidad)) {
+          //Niveles de existencias OK, crear nuevo pedido con los productos
+          Pedido.create({usuarioId, estado:'PDTE_PAGO'})
+          .then(pedido => {
+            pedido.addProductos(productos)
+            .then(() => {
+              carrito.removeProductos(productos)
+              .then(() => {
+                res.redirect("/envio");
+              })
+            })
+          })
+        } else {
+          // mostrar un mensaje diciendo que no hay existencias suficientes
+          productos.forEach(p => {
+            p.hayExistencias = p.existencias >= p.productocarrito.cantidad;
+          });
 
-        const total = productos.reduce((total, p) => total + p.precio * p.productocarrito.cantidad, 0);
+          const total = productos.reduce((total, p) => total + p.precio * p.productocarrito.cantidad, 0);
 
-        res.render("carrito", {productos, total});
-      }
-    })
+          res.render("carrito", {productos, total});
+        }
+      })
   }
 });
 
